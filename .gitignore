@@ -1,0 +1,25 @@
+
+# Entorno virtual
+.venv/
+
+# Archivos Python
+__pycache__/
+*.pyc
+
+# Datos originales y procesados
+data/raw/
+data/processed/*.parquet
+
+# Archivos temporales
+.ipynb_checkpoints/
+.quarto/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+.venv~/
+*.parquet
+
+/.quarto/
+**/*.quarto_ipynb

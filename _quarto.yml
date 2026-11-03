@@ -1,0 +1,23 @@
+
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Análisis de tráfico de red CICIDS2017"
+  navbar:
+    background: "#172554"
+    foreground: "#ffffff"
+    left:
+      - href: index.qmd
+        text: Inicio
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: true
+    lang: es-ES
+

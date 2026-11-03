@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Proyecto académico">
+
+<title>Análisis de tráfico de red CICIDS2017</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-c10bea6539f3a18bd2d6ac4b87f05c01.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Análisis de tráfico de red CICIDS2017</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Buscar"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Navegación de palanca" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">1</span> 1. Introducción</a></li>
+  <li><a href="#fuente-de-datos" id="toc-fuente-de-datos" class="nav-link" data-scroll-target="#fuente-de-datos"><span class="header-section-number">2</span> 2. Fuente de datos</a>
+  <ul class="collapse">
+  <li><a href="#características-del-conjunto" id="toc-características-del-conjunto" class="nav-link" data-scroll-target="#características-del-conjunto"><span class="header-section-number">2.1</span> 2.1. Características del conjunto</a></li>
+  </ul></li>
+  <li><a href="#preparación-y-limpieza-de-los-datos" id="toc-preparación-y-limpieza-de-los-datos" class="nav-link" data-scroll-target="#preparación-y-limpieza-de-los-datos"><span class="header-section-number">3</span> 3. Preparación y limpieza de los datos</a>
+  <ul class="collapse">
+  <li><a href="#tipos-de-datos" id="toc-tipos-de-datos" class="nav-link" data-scroll-target="#tipos-de-datos"><span class="header-section-number">3.1</span> 3.1. Tipos de datos</a></li>
+  <li><a href="#valores-nulos" id="toc-valores-nulos" class="nav-link" data-scroll-target="#valores-nulos"><span class="header-section-number">3.2</span> 3.2. Valores nulos</a></li>
+  <li><a href="#registros-duplicados" id="toc-registros-duplicados" class="nav-link" data-scroll-target="#registros-duplicados"><span class="header-section-number">3.3</span> 3.3. Registros duplicados</a></li>
+  <li><a href="#duraciones-negativas" id="toc-duraciones-negativas" class="nav-link" data-scroll-target="#duraciones-negativas"><span class="header-section-number">3.4</span> 3.4. Duraciones negativas</a></li>
+  </ul></li>
+  <li><a href="#análisis-exploratorio" id="toc-análisis-exploratorio" class="nav-link" data-scroll-target="#análisis-exploratorio"><span class="header-section-number">4</span> 4. Análisis exploratorio</a>
+  <ul class="collapse">
+  <li><a href="#distribución-de-las-etiquetas" id="toc-distribución-de-las-etiquetas" class="nav-link" data-scroll-target="#distribución-de-las-etiquetas"><span class="header-section-number">4.1</span> 4.1. Distribución de las etiquetas</a></li>
+  <li><a href="#visualización-de-los-ataques" id="toc-visualización-de-los-ataques" class="nav-link" data-scroll-target="#visualización-de-los-ataques"><span class="header-section-number">4.2</span> 4.2. Visualización de los ataques</a></li>
+  <li><a href="#análisis-del-protocolo" id="toc-análisis-del-protocolo" class="nav-link" data-scroll-target="#análisis-del-protocolo"><span class="header-section-number">4.3</span> 4.3. Análisis del protocolo</a></li>
+  </ul></li>
+  <li><a href="#análisis-estadístico" id="toc-análisis-estadístico" class="nav-link" data-scroll-target="#análisis-estadístico"><span class="header-section-number">5</span> 5. Análisis estadístico</a>
+  <ul class="collapse">
+  <li><a href="#duración-de-los-flujos" id="toc-duración-de-los-flujos" class="nav-link" data-scroll-target="#duración-de-los-flujos"><span class="header-section-number">5.1</span> 5.1. Duración de los flujos</a></li>
+  <li><a href="#comparación-entre-tráfico-benigno-y-malicioso" id="toc-comparación-entre-tráfico-benigno-y-malicioso" class="nav-link" data-scroll-target="#comparación-entre-tráfico-benigno-y-malicioso"><span class="header-section-number">5.2</span> 5.2. Comparación entre tráfico benigno y malicioso</a></li>
+  <li><a href="#duración-según-la-categoría" id="toc-duración-según-la-categoría" class="nav-link" data-scroll-target="#duración-según-la-categoría"><span class="header-section-number">5.3</span> 5.3. Duración según la categoría</a></li>
+  </ul></li>
+  <li><a href="#operaciones-con-pandas" id="toc-operaciones-con-pandas" class="nav-link" data-scroll-target="#operaciones-con-pandas"><span class="header-section-number">6</span> 6. Operaciones con Pandas</a>
+  <ul class="collapse">
+  <li><a href="#agrupación-con-groupby" id="toc-agrupación-con-groupby" class="nav-link" data-scroll-target="#agrupación-con-groupby"><span class="header-section-number">6.1</span> 6.1. Agrupación con groupby</a></li>
+  <li><a href="#tablas-dinámicas-con-pivot_table" id="toc-tablas-dinámicas-con-pivot_table" class="nav-link" data-scroll-target="#tablas-dinámicas-con-pivot_table"><span class="header-section-number">6.2</span> 6.2. Tablas dinámicas con pivot_table</a></li>
+  <li><a href="#selección-con-loc" id="toc-selección-con-loc" class="nav-link" data-scroll-target="#selección-con-loc"><span class="header-section-number">6.3</span> 6.3. Selección con loc</a></li>
+  <li><a href="#selección-con-iloc" id="toc-selección-con-iloc" class="nav-link" data-scroll-target="#selección-con-iloc"><span class="header-section-number">6.4</span> 6.4. Selección con iloc</a></li>
+  <li><a href="#filtrado-avanzado" id="toc-filtrado-avanzado" class="nav-link" data-scroll-target="#filtrado-avanzado"><span class="header-section-number">6.5</span> 6.5. Filtrado avanzado</a></li>
+  </ul></li>
+  <li><a href="#visualización-de-los-resultados" id="toc-visualización-de-los-resultados" class="nav-link" data-scroll-target="#visualización-de-los-resultados"><span class="header-section-number">7</span> 7. Visualización de los resultados</a>
+  <ul class="collapse">
+  <li><a href="#distribución-de-ataques" id="toc-distribución-de-ataques" class="nav-link" data-scroll-target="#distribución-de-ataques"><span class="header-section-number">7.1</span> 7.1. Distribución de ataques</a></li>
+  <li><a href="#duración-del-tráfico-por-categoría" id="toc-duración-del-tráfico-por-categoría" class="nav-link" data-scroll-target="#duración-del-tráfico-por-categoría"><span class="header-section-number">7.2</span> 7.2. Duración del tráfico por categoría</a></li>
+  <li><a href="#gráfico-interactivo" id="toc-gráfico-interactivo" class="nav-link" data-scroll-target="#gráfico-interactivo"><span class="header-section-number">7.3</span> 7.3. Gráfico interactivo</a></li>
+  </ul></li>
+  <li><a href="#conclusiones" id="toc-conclusiones" class="nav-link" data-scroll-target="#conclusiones"><span class="header-section-number">8</span> 8. Conclusiones</a></li>
+  <li><a href="#tecnologías-utilizadas" id="toc-tecnologías-utilizadas" class="nav-link" data-scroll-target="#tecnologías-utilizadas"><span class="header-section-number">9</span> 9. Tecnologías utilizadas</a></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">10</span> 10. Referencias</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Análisis de tráfico de red CICIDS2017</h1>
+<p class="subtitle lead">Exploración y análisis de datos aplicado a la ciberseguridad</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Autor/a</div>
+    <div class="quarto-title-meta-contents">
+             <p>Proyecto académico </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Fecha de publicación</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">3 de noviembre de 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introducción" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> 1. Introducción</h1>
+<p>La administración de sistemas y la ciberseguridad requieren herramientas que permitan analizar el tráfico de red e identificar comportamientos potencialmente maliciosos.</p>
+<p>En este proyecto se realiza un análisis exploratorio y estadístico del conjunto de datos CICIDS2017 mediante Python y la biblioteca Pandas.</p>
+<p>El objetivo principal es estudiar las características del tráfico de red, comparar las comunicaciones benignas con las maliciosas e identificar patrones relacionados con diferentes tipos de ataques.</p>
+</section>
+<section id="fuente-de-datos" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> 2. Fuente de datos</h1>
+<p>Para el desarrollo del proyecto se ha utilizado el conjunto de datos <strong>CICIDS2017</strong>, obtenido desde Kaggle.</p>
+<p><a href="https://www.kaggle.com/datasets/dhoogla/cicids2017">Consultar el conjunto de datos CICIDS2017 en Kaggle</a></p>
+<p>Este conjunto contiene registros de flujos de red clasificados según el tipo de tráfico. Incluye comunicaciones benignas y diferentes categorías de ataques, como DoS, DDoS, fuerza bruta, escaneos de puertos y ataques web.</p>
+<p>Se ha utilizado una versión del conjunto de datos en formato Parquet, distribuida en ocho archivos.</p>
+<section id="características-del-conjunto" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="características-del-conjunto"><span class="header-section-number">2.1</span> 2.1. Características del conjunto</h2>
+<p>Después de unir los ocho archivos, se obtuvo el siguiente conjunto:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Característica</th>
+<th style="text-align: right;">Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Número de registros</td>
+<td style="text-align: right;">2.313.810</td>
+</tr>
+<tr class="even">
+<td>Número de columnas</td>
+<td style="text-align: right;">79</td>
+</tr>
+<tr class="odd">
+<td>Variables numéricas</td>
+<td style="text-align: right;">77</td>
+</tr>
+<tr class="even">
+<td>Variables de texto</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td>Valores nulos</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td>Archivos originales</td>
+<td style="text-align: right;">8</td>
+</tr>
+</tbody>
+</table>
+<p>Se añadió la columna <code>Dataset_Source</code> para identificar el archivo de procedencia de cada registro.</p>
+<p>Es importante señalar que esta versión del conjunto no contiene marcas de tiempo ni direcciones IP de origen y destino. Por tanto, el análisis se centra en las características de los flujos y sus etiquetas, no en la evolución temporal ni en la identificación de equipos concretos.</p>
+</section>
+</section>
+<section id="preparación-y-limpieza-de-los-datos" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> 3. Preparación y limpieza de los datos</h1>
+<p>Los ocho archivos Parquet se combinaron utilizando Pandas. El resultado se guardó en:</p>
+<p><code>data/processed/cicids2017_completo.parquet</code></p>
+<p>Durante la preparación se realizaron las siguientes operaciones:</p>
+<ul>
+<li>Unión de los ocho archivos originales.</li>
+<li>Incorporación de la columna <code>Dataset_Source</code>.</li>
+<li>Comprobación de las dimensiones del conjunto.</li>
+<li>Revisión de los tipos de datos.</li>
+<li>Comprobación de valores nulos.</li>
+<li>Identificación de registros duplicados.</li>
+<li>Revisión de valores negativos en la duración de los flujos.</li>
+</ul>
+<section id="tipos-de-datos" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="tipos-de-datos"><span class="header-section-number">3.1</span> 3.1. Tipos de datos</h2>
+<p>Se identificaron 77 columnas numéricas y dos columnas de texto. Esta distribución permite realizar operaciones estadísticas sobre las características de los flujos de red.</p>
+</section>
+<section id="valores-nulos" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="valores-nulos"><span class="header-section-number">3.2</span> 3.2. Valores nulos</h2>
+<p>La comprobación realizada no detectó valores nulos en el conjunto de datos.</p>
+<p>Esto significa que no fue necesario aplicar técnicas de imputación para completar valores ausentes.</p>
+</section>
+<section id="registros-duplicados" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="registros-duplicados"><span class="header-section-number">3.3</span> 3.3. Registros duplicados</h2>
+<p>Al comprobar los registros sin tener en cuenta la columna <code>Dataset_Source</code>, se identificaron 82.004 filas con valores idénticos en sus características.</p>
+<p>Estos registros se conservaron para el análisis. Que dos filas tengan los mismos valores no demuestra necesariamente que representen el mismo flujo real, por lo que eliminarlas automáticamente podría provocar una pérdida de información.</p>
+</section>
+<section id="duraciones-negativas" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="duraciones-negativas"><span class="header-section-number">3.4</span> 3.4. Duraciones negativas</h2>
+<p>Se detectaron 88 registros con valores negativos en la variable <code>Flow Duration</code>. Todos pertenecían a la categoría <code>Benign</code>.</p>
+<p>Como una duración negativa no es válida para estudiar la duración de un flujo, se excluyeron estos registros de los análisis que utilizan esta variable.</p>
+<p>No se eliminaron del conjunto original.</p>
+</section>
+</section>
+<section id="análisis-exploratorio" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> 4. Análisis exploratorio</h1>
+<p>El análisis exploratorio permite conocer la distribución de las categorías de tráfico y las características generales de los registros.</p>
+<section id="distribución-de-las-etiquetas" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="distribución-de-las-etiquetas"><span class="header-section-number">4.1</span> 4.1. Distribución de las etiquetas</h2>
+<p>La variable <code>Label</code> identifica el tipo de tráfico registrado.</p>
+<p>Las categorías con mayor número de registros son:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Categoría</th>
+<th style="text-align: right;">Registros</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Benign</td>
+<td style="text-align: right;">1.977.318</td>
+</tr>
+<tr class="even">
+<td>DoS Hulk</td>
+<td style="text-align: right;">172.846</td>
+</tr>
+<tr class="odd">
+<td>DDoS</td>
+<td style="text-align: right;">128.014</td>
+</tr>
+<tr class="even">
+<td>DoS GoldenEye</td>
+<td style="text-align: right;">10.286</td>
+</tr>
+<tr class="odd">
+<td>FTP-Patator</td>
+<td style="text-align: right;">5.931</td>
+</tr>
+<tr class="even">
+<td>DoS slowloris</td>
+<td style="text-align: right;">5.385</td>
+</tr>
+<tr class="odd">
+<td>DoS Slowhttptest</td>
+<td style="text-align: right;">5.228</td>
+</tr>
+<tr class="even">
+<td>SSH-Patator</td>
+<td style="text-align: right;">3.219</td>
+</tr>
+<tr class="odd">
+<td>PortScan</td>
+<td style="text-align: right;">1.956</td>
+</tr>
+</tbody>
+</table>
+<p>La categoría <code>Benign</code> representa aproximadamente el 85,46 % del conjunto. Esto muestra que existe un desequilibrio importante entre el tráfico benigno y las distintas categorías de ataques.</p>
+</section>
+<section id="visualización-de-los-ataques" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="visualización-de-los-ataques"><span class="header-section-number">4.2</span> 4.2. Visualización de los ataques</h2>
+<p>El siguiente gráfico representa la distribución de las categorías maliciosas, excluyendo el tráfico benigno.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/01_distribucion_ataques.png" class="img-fluid figure-img"></p>
+<figcaption>Distribución de los tipos de ataques</figcaption>
+</figure>
+</div>
+<p>Se observa que DoS Hulk y DDoS son las categorías de ataque con mayor presencia en el conjunto de datos.</p>
+</section>
+<section id="análisis-del-protocolo" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="análisis-del-protocolo"><span class="header-section-number">4.3</span> 4.3. Análisis del protocolo</h2>
+<p>La variable <code>Protocol</code> permite distinguir los protocolos de red mediante sus identificadores numéricos.</p>
+<p>Los valores más frecuentes encontrados son:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Protocolo</th>
+<th style="text-align: right;">Registros</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>6 (TCP)</td>
+<td style="text-align: right;">1.363.379</td>
+</tr>
+<tr class="even">
+<td>17 (UDP)</td>
+<td style="text-align: right;">948.842</td>
+</tr>
+<tr class="odd">
+<td>0</td>
+<td style="text-align: right;">1.589</td>
+</tr>
+</tbody>
+</table>
+<p>TCP y UDP concentran prácticamente todos los registros del conjunto analizado.</p>
+</section>
+</section>
+<section id="análisis-estadístico" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> 5. Análisis estadístico</h1>
+<p>Se utilizaron medidas estadísticas para estudiar las características de los flujos de red.</p>
+<p>Entre las operaciones realizadas se encuentran:</p>
+<ul>
+<li>Media.</li>
+<li>Mediana.</li>
+<li>Recuento de registros.</li>
+<li>Agrupaciones por categoría.</li>
+<li>Comparación de paquetes enviados y recibidos.</li>
+</ul>
+<section id="duración-de-los-flujos" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="duración-de-los-flujos"><span class="header-section-number">5.1</span> 5.1. Duración de los flujos</h2>
+<p>La variable <code>Flow Duration</code> representa la duración del flujo en microsegundos.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Medida</th>
+<th style="text-align: right;">Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Media</td>
+<td style="text-align: right;">18.075.750 µs</td>
+</tr>
+<tr class="even">
+<td>Mediana</td>
+<td style="text-align: right;">64.783 µs</td>
+</tr>
+<tr class="odd">
+<td>Mínimo original</td>
+<td style="text-align: right;">-13 µs</td>
+</tr>
+<tr class="even">
+<td>Máximo</td>
+<td style="text-align: right;">120.000.000 µs</td>
+</tr>
+</tbody>
+</table>
+<p>La diferencia entre la media y la mediana indica que existen valores de duración muy elevados que influyen en la media.</p>
+<p>Por este motivo, la mediana resulta especialmente útil para describir el comportamiento habitual de los flujos.</p>
+</section>
+<section id="comparación-entre-tráfico-benigno-y-malicioso" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="comparación-entre-tráfico-benigno-y-malicioso"><span class="header-section-number">5.2</span> 5.2. Comparación entre tráfico benigno y malicioso</h2>
+<p>Para esta comparación se excluyeron los 88 registros con duración negativa.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 21%">
+<col style="width: 21%">
+<col style="width: 21%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Tipo de tráfico</th>
+<th style="text-align: right;">Registros</th>
+<th style="text-align: right;">Media de paquetes enviados</th>
+<th style="text-align: right;">Media de paquetes recibidos</th>
+<th style="text-align: right;">Mediana de duración (µs)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Benigno</td>
+<td style="text-align: right;">1.977.230</td>
+<td style="text-align: right;">11,96</td>
+<td style="text-align: right;">13,85</td>
+<td style="text-align: right;">48.648</td>
+</tr>
+<tr class="even">
+<td>Malicioso</td>
+<td style="text-align: right;">336.492</td>
+<td style="text-align: right;">5,93</td>
+<td style="text-align: right;">4,96</td>
+<td style="text-align: right;">63.136.302,5</td>
+</tr>
+</tbody>
+</table>
+<p>Los resultados muestran diferencias importantes entre ambos grupos.</p>
+<p>En este conjunto, los flujos maliciosos presentan una mediana de duración considerablemente superior a la del tráfico benigno.</p>
+<p>Sin embargo, esta diferencia no significa que la duración sea suficiente por sí sola para identificar un ataque. Es necesario analizar conjuntamente diferentes características del tráfico.</p>
+</section>
+<section id="duración-según-la-categoría" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="duración-según-la-categoría"><span class="header-section-number">5.3</span> 5.3. Duración según la categoría</h2>
+<p>Se realizó una agrupación por <code>Label</code> para calcular el número de registros, la duración media y mediana, y el promedio de paquetes enviados y recibidos.</p>
+<p>Algunos resultados destacados son:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Categoría</th>
+<th style="text-align: right;">Mediana de duración (µs)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Heartbleed</td>
+<td style="text-align: right;">119.261.118</td>
+</tr>
+<tr class="even">
+<td>DoS slowloris</td>
+<td style="text-align: right;">99.999.406</td>
+</tr>
+<tr class="odd">
+<td>Infiltration</td>
+<td style="text-align: right;">93.188.869</td>
+</tr>
+<tr class="even">
+<td>DoS Hulk</td>
+<td style="text-align: right;">86.401.812</td>
+</tr>
+<tr class="odd">
+<td>DoS Slowhttptest</td>
+<td style="text-align: right;">63.120.444</td>
+</tr>
+<tr class="even">
+<td>Benign</td>
+<td style="text-align: right;">48.648</td>
+</tr>
+<tr class="odd">
+<td>PortScan</td>
+<td style="text-align: right;">674</td>
+</tr>
+</tbody>
+</table>
+<p>Las diferencias entre categorías muestran que cada tipo de tráfico puede presentar características distintas.</p>
+</section>
+</section>
+<section id="operaciones-con-pandas" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> 6. Operaciones con Pandas</h1>
+<p>Durante el análisis se utilizaron diferentes herramientas de Pandas para seleccionar, agrupar y resumir los datos.</p>
+<section id="agrupación-con-groupby" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="agrupación-con-groupby"><span class="header-section-number">6.1</span> 6.1. Agrupación con groupby</h2>
+<p>Se utilizó <code>groupby()</code> para agrupar los registros por la variable <code>Label</code>.</p>
+<p>Esto permitió calcular estadísticas independientes para cada categoría de tráfico, como la duración media y mediana y el promedio de paquetes enviados y recibidos.</p>
+</section>
+<section id="tablas-dinámicas-con-pivot_table" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="tablas-dinámicas-con-pivot_table"><span class="header-section-number">6.2</span> 6.2. Tablas dinámicas con pivot_table</h2>
+<p>Se utilizó <code>pivot_table()</code> para comparar la media de paquetes enviados (<code>Total Fwd Packets</code>) según la categoría de tráfico y el protocolo.</p>
+<p>Esta operación permite estudiar cómo se distribuyen determinadas características del tráfico entre diferentes protocolos.</p>
+</section>
+<section id="selección-con-loc" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="selección-con-loc"><span class="header-section-number">6.3</span> 6.3. Selección con loc</h2>
+<p>Se utilizó <code>loc</code> para seleccionar registros mediante condiciones sobre las etiquetas.</p>
+<p>Por ejemplo, se filtraron las categorías cuyo nombre contiene las expresiones <code>DoS</code> o <code>DDoS</code>.</p>
+</section>
+<section id="selección-con-iloc" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="selección-con-iloc"><span class="header-section-number">6.4</span> 6.4. Selección con iloc</h2>
+<p>Se utilizó <code>iloc</code> para seleccionar filas y columnas por su posición.</p>
+<p>Esta operación permitió consultar una muestra inicial del conjunto de datos y comprobar su estructura.</p>
+</section>
+<section id="filtrado-avanzado" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="filtrado-avanzado"><span class="header-section-number">6.5</span> 6.5. Filtrado avanzado</h2>
+<p>También se aplicaron condiciones combinadas para localizar flujos con una duración superior a 60.000.000 microsegundos y más de 100 paquetes enviados.</p>
+<p>Se encontraron 7.942 registros que cumplían ambas condiciones.</p>
+<p>La muestra obtenida incluía también tráfico benigno. Esto demuestra que una duración elevada y un número alto de paquetes no permiten clasificar automáticamente un flujo como malicioso.</p>
+</section>
+</section>
+<section id="visualización-de-los-resultados" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> 7. Visualización de los resultados</h1>
+<p>Se generaron tres visualizaciones para facilitar la interpretación de los datos.</p>
+<section id="distribución-de-ataques" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="distribución-de-ataques"><span class="header-section-number">7.1</span> 7.1. Distribución de ataques</h2>
+<p>El primer gráfico muestra el número de registros de cada categoría maliciosa.</p>
+<p>Permite identificar rápidamente qué tipos de ataques tienen mayor representación en el conjunto.</p>
+</section>
+<section id="duración-del-tráfico-por-categoría" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="duración-del-tráfico-por-categoría"><span class="header-section-number">7.2</span> 7.2. Duración del tráfico por categoría</h2>
+<p>El segundo gráfico utiliza diagramas de caja (<em>boxplots</em>) para comparar la distribución de la duración de los flujos entre las diferentes categorías.</p>
+<p>Se ha utilizado una escala simétrica logarítmica para facilitar la visualización de valores muy diferentes.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/02_duracion_trafico.png" class="img-fluid figure-img"></p>
+<figcaption>Duración de los flujos por categoría</figcaption>
+</figure>
+</div>
+<p>Para facilitar la representación, se ha utilizado una muestra de hasta 1.000 registros por categoría.</p>
+</section>
+<section id="gráfico-interactivo" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="gráfico-interactivo"><span class="header-section-number">7.3</span> 7.3. Gráfico interactivo</h2>
+<p>El tercer gráfico permite explorar la relación entre la duración del flujo y el número de paquetes enviados.</p>
+<p>Se puede interactuar con la visualización, seleccionar categorías en la leyenda y consultar información adicional al situar el cursor sobre los puntos.</p>
+<iframe src="images/03_trafico_interactivo.html" width="100%" height="650px" title="Visualización interactiva del tráfico de red">
+</iframe>
+<p>Esta visualización es interactiva, pero no temporal, ya que la versión del conjunto de datos utilizada no dispone de marcas de tiempo.</p>
+</section>
+</section>
+<section id="conclusiones" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> 8. Conclusiones</h1>
+<p>El análisis del conjunto CICIDS2017 ha permitido estudiar más de dos millones de registros de tráfico de red y comparar diferentes categorías de comunicaciones benignas y maliciosas.</p>
+<p>Las principales conclusiones son:</p>
+<ol type="1">
+<li>El conjunto presenta un claro desequilibrio entre el tráfico benigno y el malicioso, con un predominio de las comunicaciones benignas.</li>
+<li>DoS Hulk y DDoS son las categorías de ataque con mayor número de registros.</li>
+<li>La duración de los flujos presenta diferencias importantes entre categorías.</li>
+<li>La media y la mediana pueden ofrecer interpretaciones distintas cuando existen valores extremos.</li>
+<li>El análisis combinado de varias características es más adecuado que utilizar una única variable para identificar posibles comportamientos maliciosos.</li>
+<li>Pandas facilita la exploración, limpieza, agrupación y análisis estadístico de grandes conjuntos de datos.</li>
+</ol>
+<p>Como limitación, la versión utilizada no contiene marcas de tiempo ni direcciones IP. Por ello, no ha sido posible estudiar la evolución temporal del tráfico ni identificar los equipos implicados en las comunicaciones.</p>
+<p>En definitiva, el proyecto demuestra cómo las herramientas de análisis de datos pueden ayudar a comprender el comportamiento del tráfico de red y aportar información útil en tareas relacionadas con la administración de sistemas y la ciberseguridad.</p>
+</section>
+<section id="tecnologías-utilizadas" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> 9. Tecnologías utilizadas</h1>
+<ul>
+<li><strong>Python:</strong> lenguaje de programación utilizado para desarrollar el análisis.</li>
+<li><strong>Pandas:</strong> manipulación, limpieza y análisis de datos.</li>
+<li><strong>NumPy:</strong> operaciones numéricas.</li>
+<li><strong>Matplotlib y Seaborn:</strong> generación de gráficos estáticos.</li>
+<li><strong>Plotly:</strong> creación de visualizaciones interactivas.</li>
+<li><strong>Quarto:</strong> elaboración y publicación de la documentación.</li>
+</ul>
+</section>
+<section id="referencias" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> 10. Referencias</h1>
+<ul>
+<li>Dataset: <a href="https://www.kaggle.com/datasets/dhoogla/cicids2017">CICIDS2017 - Kaggle</a></li>
+<li>Documentación de <a href="https://pandas.pydata.org/docs/">Pandas</a></li>
+<li>Documentación de <a href="https://matplotlib.org/stable/">Matplotlib</a></li>
+<li>Documentación de <a href="https://seaborn.pydata.org/">Seaborn</a></li>
+<li>Documentación de <a href="https://plotly.com/python/">Plotly</a></li>
+<li>Documentación de <a href="https://quarto.org/docs/">Quarto</a></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
