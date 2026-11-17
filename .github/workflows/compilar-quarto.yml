@@ -1,0 +1,47 @@
+name: Compilar informe Quarto
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "index.qmd"
+      - "_quarto.yml"
+      - "images/**"
+      - ".github/workflows/compilar-quarto.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias del informe
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+
+      - name: Instalar Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Generar HTML con Quarto
+        run: quarto render
+
+      - name: Guardar web actualizada en docs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f docs/
+          if ! git diff --cached --quiet; then
+            git commit -m "Actualizar GitHub Pages con informe Quarto"
+            git push
+          fi
