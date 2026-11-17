@@ -1,35 +1,65 @@
+# Análisis de tráfico de red CICIDS2017 — Trabajo de Pandas (ASIR)
 
-# Análisis de tráfico de red CICIDS2017
+Trabajo académico de **Arturo, Diego, Oscar y Álvaro** sobre el uso de **Python y Pandas** para la exploración, limpieza, transformación, análisis estadístico y visualización de flujos de red.
 
-## Descripción
+## Entregables principales
 
-Proyecto de análisis de datos aplicado a la administración de sistemas y la ciberseguridad utilizando Python y Pandas.
+- **Informe Quarto / GitHub Pages:** https://oscarfh1998.github.io/proyecto-sysadmin-pandas/
+- **Código fuente del informe:** [index.qmd](index.qmd)
+- **Repositorio público:** https://github.com/oscarfh1998/proyecto-sysadmin-pandas
 
-El objetivo es explorar y analizar el conjunto de datos CICIDS2017 para estudiar diferentes tipos de tráfico de red, distinguir entre comunicaciones benignas y maliciosas e identificar patrones asociados a distintos ataques.
+La [aplicación exploratoria adicional](https://sysadmin-analytics-cicids-oscar.hummingvale.chatgpt.site/) es complementaria y no sustituye al informe Quarto.
 
-## Tecnologías utilizadas
+## Datos
 
-- Python
-- Pandas y NumPy
-- Matplotlib y Seaborn
-- Plotly
-- Quarto
+Se ha utilizado una versión en **ocho archivos Parquet** del dataset [CICIDS2017 (Kaggle)](https://www.kaggle.com/datasets/dhoogla/cicids2017). Después de unir y procesar los archivos se obtuvieron **2.313.810 registros y 79 columnas**.
 
-## Estructura del proyecto
+Los archivos de datos grandes no se suben al repositorio. Deben colocarse en `data/raw/`; el consolidado se guarda en `data/processed/cicids2017_completo.parquet`.
 
-- `data/`: datos originales y procesados.
-- `images/`: gráficos generados.
-- `proyecto.qmd`: documentación del análisis.
-- `graficos.py`: generación de visualizaciones.
-- `analisis_exploratorio.py`: exploración inicial.
-- `analisis_estadistico.py`: análisis estadístico.
-- `calidad_datos.py`: comprobaciones de calidad.
+## Estructura y operaciones de Pandas
 
-## Fuente de datos
+| Archivo | Función |
+|---|---|
+| `explorar.py` | Inspección de cada archivo de origen, previa a la unión |
+| `unir_datasets.py` | Unión de Parquet con `pd.concat()` y preparación de datos |
+| `analisis_exploratorio.py` | Dimensiones, tipos, `describe()`, `value_counts()` y protocolos |
+| `calidad_datos.py` | Nulos, infinitos, duplicados y duraciones negativas |
+| `analisis_estadistico.py` | `groupby()`, `agg()`, `pivot_table()`, `loc` e `iloc` |
+| `graficos.py` | Dos visualizaciones estáticas y una interactiva con Plotly |
+| `index.qmd` | **Informe completo:** código Pandas, resultados e interpretación SysAdmin |
+| `_quarto.yml` | Configuración de Quarto; web generada en `docs/` |
 
-[CICIDS2017 - Kaggle](https://www.kaggle.com/datasets/dhoogla/cicids2017)
+## Reproducir el análisis localmente
 
-## Autor
+Se necesita Python 3, Quarto y los ocho archivos Parquet descargados.
 
-Proyecto académico de análisis de datos aplicado a la ciberseguridad.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python unir_datasets.py
+python analisis_exploratorio.py
+python calidad_datos.py
+python analisis_estadistico.py
+python graficos.py
+```
 
+Para generar la web:
+
+```bash
+quarto render
+```
+
+El informe tiene `execute.eval: false` para permitir compilar **la documentación** en GitHub sin los grandes Parquet. Los resultados publicados corresponden a las ejecuciones documentadas del grupo. Para recalcular directamente los bloques de `index.qmd` en un equipo que sí tenga los datos, cambia `eval: false` a `eval: true`, verifica que las rutas y dependencias sean correctas y ejecuta `quarto render`.
+
+GitHub Actions dispone de un flujo `.github/workflows/compilar-quarto.yml` para regenerar el contenido de `docs/` cuando se modifique la fuente del informe.
+
+## Interpretación y límites
+
+Este análisis es **descriptivo**, no un detector predictivo validado. En el informe se indica la diferencia entre tráfico benigno y malicioso, la detección de 88 duraciones negativas, la revisión de duplicados y las limitaciones para atribuir ataques o representar evolución temporal sin marcas de tiempo ni IP.
+
+## Referencias
+
+- [Dataset CICIDS2017 utilizado](https://www.kaggle.com/datasets/dhoogla/cicids2017)
+- [Pandas](https://pandas.pydata.org/docs/)
+- [Quarto](https://quarto.org/docs/)
