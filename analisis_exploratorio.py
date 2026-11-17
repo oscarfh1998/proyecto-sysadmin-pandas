@@ -1,6 +1,3 @@
-# analisis_exploratorio_comentado_por_bloques.py
-# Guia de exposicion: cada bloque explica SU OBJETIVO, no cada instruccion.
-# Las lineas de codigo originales se conservan; solo se añaden comentarios encima.
 
 # =====================================================================
 # BLOQUE: 1. Abrir el dataset unido
