@@ -1,11 +1,7 @@
 ---
 title: "Análisis de tráfico de red CICIDS2017"
 subtitle: "Trabajo de Pandas aplicado a la Administración de Sistemas"
-author:
-  - Arturo
-  - Diego
-  - Oscar
-  - Álvaro
+author: "Arturo, Diego, Oscar y Álvaro"
 lang: es
 format:
   html:
@@ -177,7 +173,7 @@ df_duracion["Tipo_Trafico"] = df_duracion["Label"].apply(
 
 # Tres resúmenes estadísticos del tráfico
 
-## Resumen 1. Distribución benigno y malicioso
+## Distribución benigno y malicioso
 
 ~~~{python}
 conteo_etiquetas = df["Label"].value_counts()
@@ -200,7 +196,7 @@ Las etiquetas maliciosas más frecuentes son **DoS Hulk (172.846)** y **DDoS (12
 
 **Interpretación SysAdmin.** El dataset está desequilibrado: la mayoría de los flujos son benignos, y algunos ataques aparecen mucho más que otros. Por ello no conviene interpretar solo el número bruto de detecciones ni concluir que los ataques más representados en este dataset sean los más habituales en cualquier red real.
 
-## Resumen 2. Duración de los flujos
+## Duración de los flujos
 
 ~~~{python}
 print(df["Flow Duration"].describe())       # Vista original
@@ -220,7 +216,7 @@ La **media** es el promedio; la **mediana**, el valor central al ordenar las dur
 
 **Interpretación SysAdmin.** Conviene comparar medias, medianas y valores extremos, no fijar un umbral de alarma únicamente con la media global.
 
-## Resumen 3. Protocolos de red
+## Protocolos de red
 
 ~~~{python}
 protocolos = df["Protocol"].value_counts()
@@ -334,7 +330,7 @@ Con `&` exigimos simultáneamente una duración de **más de 60 segundos** y **m
 
 # Visualización e interpretación
 
-## Gráfico estático 1. Distribución de los ataques
+## Gráfico estático: Distribución de los ataques
 
 ~~~{python}
 import matplotlib.pyplot as plt
@@ -352,7 +348,7 @@ plt.close()
 
 **Interpretación SysAdmin.** El gráfico identifica qué etiquetas ocupan más registros de esta muestra. DoS Hulk y DDoS destacan; esto puede orientar las siguientes consultas, pero no debe confundirse con la frecuencia real de incidentes en una empresa.
 
-## Gráfico estático 2. Duración por categoría
+## Gráfico estático: Duración por categoría
 
 ~~~{python}
 import seaborn as sns
