@@ -2,7 +2,8 @@
 <html lang="es"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="Informe de Pandas y Quarto: análisis de tráfico CICIDS2017 con código, tablas, gráficos e interpretación para administración de sistemas.">
-<title>Análisis del tráfico CICIDS2017 · Trabajo de Pandas</title>
+<title>Análisis del tráfico CICIDS2017 · Arturo, Diego, Oscar y Álvaro</title>
+<meta name="author" content="Arturo, Diego, Oscar y Álvaro">
 <style>
 :root{--navy:#14244c;--ink:#192b40;--blue:#225f9d;--muted:#61748a;--border:#dae4ef;--pale:#f5f8fc;--accent:#007c87}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:#fff;font:16px/1.66 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
@@ -41,7 +42,7 @@ figcaption{font-size:13px;color:var(--muted);padding-top:7px}
 @media(max-width:960px){.layout{grid-template-columns:1fr;max-width:850px;padding:22px 19px 60px}.sidebar{display:none}.hero{padding:38px 19px}.topbar{padding:13px 17px}.nav-right{gap:9px}.nav-right a{font-size:12px}main h2{font-size:24px}}
 </style></head>
 <body><header class="topbar"><a class="logo" href="./">CICIDS2017 · PANDAS</a><nav class="nav-right"><a href="https://github.com/oscarfh1998/proyecto-sysadmin-pandas" target="_blank" rel="noopener">Código en GitHub</a><a href="#analisis-avanzado-con-pandas">Operaciones Pandas</a></nav></header>
-<section class="hero"><div class="hero-inner"><div class="eyebrow">Trabajo académico · Administración de Sistemas</div><h1>Análisis de tráfico de red CICIDS2017</h1><p class="subtitle">Adquisición, limpieza, exploración, transformación y visualización de datos con Pandas y Quarto</p><p class="authors">Arturo · Diego · Oscar · Álvaro</p><div class="chips"><span class="chip">Pandas</span><span class="chip">groupby</span><span class="chip">pivot_table</span><span class="chip">loc / iloc</span><span class="chip">Matplotlib</span><span class="chip">Plotly</span></div></div></section>
+<section class="hero"><div class="hero-inner"><div class="eyebrow">Trabajo académico · Administración de Sistemas</div><h1>Análisis de tráfico de red CICIDS2017</h1><p class="subtitle">Adquisición, limpieza, exploración, transformación y visualización de datos con Pandas y Quarto</p><p class="authors"><strong>Autores:</strong> Arturo, Diego, Oscar y Álvaro</p><div class="chips"><span class="chip">Pandas</span><span class="chip">groupby</span><span class="chip">pivot_table</span><span class="chip">loc / iloc</span><span class="chip">Matplotlib</span><span class="chip">Plotly</span></div></div></section>
 <div class="layout"><aside class="sidebar"><h2>En este informe</h2><a href="#introduccion-y-objetivo">Introducción y objetivo</a><a href="#adquisicion-y-descripcion-del-dataset">Adquisición y descripción del dataset</a><a href="#exploracion-y-limpieza-con-pandas">Exploración y limpieza con Pandas</a><a href="#tres-resumenes-estadisticos-del-trafico">Tres resúmenes estadísticos del tráfico</a><a href="#analisis-avanzado-con-pandas">Análisis avanzado con Pandas</a><a href="#visualizacion-e-interpretacion">Visualización e interpretación</a><a href="#interpretacion-tecnica-y-medidas-para-un-sysadmin">Interpretación técnica y medidas para un SysAdmin</a><a href="#conclusiones-y-mejoras-futuras">Conclusiones y mejoras futuras</a><a href="#reproducibilidad-repositorio-y-publicacion">Reproducibilidad, repositorio y publicación</a><a href="#referencias">Referencias</a></aside><main>
 <div class="controls"><button type="button" onclick="document.querySelectorAll('details.code-fold').forEach(el=>el.open=true)">Mostrar todo el código</button><button type="button" onclick="document.querySelectorAll('details.code-fold').forEach(el=>el.open=false)">Ocultar el código</button></div>
 <aside class="notice"><strong>Cómo leer este informe</strong>
@@ -136,7 +137,7 @@ df_duracion[&quot;Tipo_Trafico&quot;] = df_duracion[&quot;Label&quot;].apply(
 <div class="table-wrap"><table><thead><tr><th>Población de análisis</th><th>Registros</th></tr></thead><tbody><tr><td>Consolidado original</td><td>2.313.810</td></tr><tr><td>Duraciones negativas</td><td>88</td></tr><tr><td>Subconjunto con duración no negativa</td><td><strong>2.313.722</strong></td></tr></tbody></table></div>
 <p><strong>Interpretación SysAdmin.</strong> Filtrar un subconjunto no equivale a borrar los datos originales. Si se compara la <em>duración</em>, hay que utilizar el subconjunto válido en <strong>todas</strong> las operaciones pertinentes. El script estadístico del repositorio aplica ese filtro en su primer resumen, pero en una comparación posterior vuelve a usar <code>df</code>; para comparar duraciones con el mismo criterio, aquí usamos <code>df_duracion</code>.</p>
 <h2 id="tres-resumenes-estadisticos-del-trafico">Tres resúmenes estadísticos del tráfico</h2>
-<h3 id="resumen-1-distribucion-benigno-y-malicioso">Resumen 1. Distribución benigno y malicioso</h3>
+<h3 id="resumen-1-distribucion-benigno-y-malicioso">Distribución benigno y malicioso</h3>
 <details class="code-fold"><summary>Ver código python <span class="code-label">8 líneas</span></summary><pre><code class="language-python">conteo_etiquetas = df[&quot;Label&quot;].value_counts()
 tipo = df[&quot;Label&quot;].apply(
     lambda x: &quot;Benigno&quot; if x == &quot;Benign&quot; else &quot;Malicioso&quot;
@@ -148,7 +149,7 @@ print(porcentajes)</code></pre></details>
 <div class="table-wrap"><table><thead><tr><th>Tipo de tráfico</th><th>Registros</th><th>Porcentaje</th></tr></thead><tbody><tr><td>Benigno</td><td>1.977.318</td><td>85,46 %</td></tr><tr><td>Malicioso</td><td>336.492</td><td>14,54 %</td></tr><tr><td><strong>Total</strong></td><td><strong>2.313.810</strong></td><td><strong>100 %</strong></td></tr></tbody></table></div>
 <p>Las etiquetas maliciosas más frecuentes son <strong>DoS Hulk (172.846)</strong> y <strong>DDoS (128.014)</strong>; también aparecen DoS GoldenEye (10.286), FTP-Patator (5.931) y otras categorías menos numerosas.</p>
 <p><strong>Interpretación SysAdmin.</strong> El dataset está desequilibrado: la mayoría de los flujos son benignos, y algunos ataques aparecen mucho más que otros. Por ello no conviene interpretar solo el número bruto de detecciones ni concluir que los ataques más representados en este dataset sean los más habituales en cualquier red real.</p>
-<h3 id="resumen-2-duracion-de-los-flujos">Resumen 2. Duración de los flujos</h3>
+<h3 id="resumen-2-duracion-de-los-flujos">Duración de los flujos</h3>
 <details class="code-fold"><summary>Ver código python <span class="code-label">4 líneas</span></summary><pre><code class="language-python">print(df[&quot;Flow Duration&quot;].describe())       # Vista original
 print(df_duracion[&quot;Flow Duration&quot;].agg(      # Vista válida
     [&quot;count&quot;, &quot;mean&quot;, &quot;median&quot;, &quot;min&quot;, &quot;max&quot;]
@@ -156,7 +157,7 @@ print(df_duracion[&quot;Flow Duration&quot;].agg(      # Vista válida
 <div class="table-wrap"><table><thead><tr><th>Estadística del conjunto original</th><th>Valor publicado</th></tr></thead><tbody><tr><td>Media de duración</td><td>18.075.750 µs</td></tr><tr><td>Mediana de duración</td><td>64.783 µs</td></tr><tr><td>Mínimo</td><td>−13 µs</td></tr><tr><td>Máximo</td><td>120.000.000 µs</td></tr></tbody></table></div>
 <p>La <strong>media</strong> es el promedio; la <strong>mediana</strong>, el valor central al ordenar las duraciones. La diferencia entre ambas muestra que unas pocas duraciones elevadas pueden influir mucho en la media. La tabla de arriba es la del conjunto original y por eso conserva el mínimo negativo; los siguientes análisis de duración utilizan <code>df_duracion</code>.</p>
 <p><strong>Interpretación SysAdmin.</strong> Conviene comparar medias, medianas y valores extremos, no fijar un umbral de alarma únicamente con la media global.</p>
-<h3 id="resumen-3-protocolos-de-red">Resumen 3. Protocolos de red</h3>
+<h3 id="resumen-3-protocolos-de-red">Protocolos de red</h3>
 <details class="code-fold"><summary>Ver código python <span class="code-label">2 líneas</span></summary><pre><code class="language-python">protocolos = df[&quot;Protocol&quot;].value_counts()
 print(protocolos)</code></pre></details>
 <div class="table-wrap"><table><thead><tr><th>Identificador <code>Protocol</code></th><th>Registros</th></tr></thead><tbody><tr><td>6 (TCP)</td><td>1.363.379</td></tr><tr><td>17 (UDP)</td><td>948.842</td></tr><tr><td>0 (valor presente en el dataset)</td><td>1.589</td></tr></tbody></table></div>
@@ -218,7 +219,7 @@ print(flujos_largos.head(10))</code></pre></details>
 <p>Con <code>&amp;</code> exigimos simultáneamente una duración de <strong>más de 60 segundos</strong> y <strong>más de 100 paquetes enviados</strong>. El resultado publicado fue de <strong>7.942 flujos</strong>.</p>
 <p><strong>Interpretación SysAdmin.</strong> Este filtro sirve para crear una <strong>lista de revisión</strong>, no una lista de ataques confirmados: también hay tráfico benigno con esas características. Un administrador debería revisar registros relacionados y ajustar los umbrales al funcionamiento normal del servicio.</p>
 <h2 id="visualizacion-e-interpretacion">Visualización e interpretación</h2>
-<h3 id="grafico-estatico-1-distribucion-de-los-ataques">Gráfico estático 1. Distribución de los ataques</h3>
+<h3 id="grafico-estatico-1-distribucion-de-los-ataques">Gráfico estático: distribución de los ataques</h3>
 <details class="code-fold"><summary>Ver código python <span class="code-label">9 líneas</span></summary><pre><code class="language-python">import matplotlib.pyplot as plt
 
 ataques = df[&quot;Label&quot;].value_counts().drop(&quot;Benign&quot;, errors=&quot;ignore&quot;)
@@ -230,7 +231,7 @@ plt.savefig(&quot;images/01_distribucion_ataques.png&quot;, dpi=300)
 plt.close()</code></pre></details>
 <figure><img src="images/01_distribucion_ataques.png" alt="Frecuencia de cada etiqueta de ataque, excluido el tráfico benigno" loading="lazy"><figcaption>Frecuencia de cada etiqueta de ataque, excluido el tráfico benigno</figcaption></figure>
 <p><strong>Interpretación SysAdmin.</strong> El gráfico identifica qué etiquetas ocupan más registros de esta muestra. DoS Hulk y DDoS destacan; esto puede orientar las siguientes consultas, pero no debe confundirse con la frecuencia real de incidentes en una empresa.</p>
-<h3 id="grafico-estatico-2-duracion-por-categoria">Gráfico estático 2. Duración por categoría</h3>
+<h3 id="grafico-estatico-2-duracion-por-categoria">Gráfico estático: duración por categoría</h3>
 <details class="code-fold" open><summary>Ver código python <span class="code-label">13 líneas</span></summary><pre><code class="language-python">import seaborn as sns
 
 muestra = pd.concat(
